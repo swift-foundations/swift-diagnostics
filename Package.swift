@@ -15,8 +15,8 @@ let package = Package(
         .library(name: "Diagnostics", targets: ["Diagnostics"])
     ],
     dependencies: [
-        .package(path: "../../swift-primitives/swift-diagnostic-primitives"),
-        .package(path: "../../swift-primitives/swift-source-primitives")
+        .package(url: "https://github.com/swift-primitives/swift-diagnostic-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-source-primitives.git", branch: "main")
     ],
     targets: [
         .target(

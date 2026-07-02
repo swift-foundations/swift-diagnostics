@@ -29,7 +29,7 @@ extension Diagnostics.Parser {
             guard parts.count == 5 else { return nil }
             let path = Swift.String(parts[0])
             guard let lineNumber = Swift.Int(parts[1]),
-                  let columnNumber = Swift.Int(parts[2])
+                let columnNumber = Swift.Int(parts[2])
             else { return nil }
             let severityString = parts[3].trimmingPrefixWhitespace()
             let message = parts[4].trimmingPrefixWhitespace()

@@ -18,47 +18,50 @@ extension Diagnostics.Parser {
     /// per-line shape is testable in isolation and stays distinct from
     /// the stream-level driver.
     internal enum Line {
-        /// Parse a single stderr line into a ``Diagnostic/Record``.
-        ///
-        /// Returns `nil` when the line does not match the expected
-        /// `<path>:<line>:<column>: <severity>: <message>` shape — for
-        /// example, when the line is a build-progress message, an empty
-        /// line, or a continuation of a multi-line diagnostic body.
-        internal static func parse(_ line: Swift.String) -> Diagnostic.Record? {
-            let parts = line.split(separator: ":", maxSplits: 4, omittingEmptySubsequences: false)
-            guard parts.count == 5 else { return nil }
-            let path = Swift.String(parts[0])
-            guard let lineNumber = Swift.Int(parts[1]),
-                let columnNumber = Swift.Int(parts[2])
-            else { return nil }
-            let severityString = parts[3].trimmingPrefixWhitespace()
-            let message = parts[4].trimmingPrefixWhitespace()
-            guard let severity = severity(forKeyword: severityString) else { return nil }
-            return Diagnostic.Record(
-                location: Source.Location(
-                    fileID: path,
-                    filePath: path,
-                    line: lineNumber,
-                    column: columnNumber
-                ),
-                severity: severity,
-                identifier: "swift_build_diagnostic",
-                message: message
-            )
-        }
+    }
+}
 
-        /// Map a severity keyword (`error`, `warning`, `note`, `remark`)
-        /// to the typed ``Diagnostic/Severity`` case. Unknown keywords
-        /// return `nil`, which the caller treats as a non-diagnostic
-        /// line.
-        internal static func severity(forKeyword keyword: Swift.String) -> Diagnostic.Severity? {
-            switch keyword {
-            case "error": return .error
-            case "warning": return .warning
-            case "note": return .note
-            case "remark": return .remark
-            default: return nil
-            }
+extension Diagnostics.Parser.Line {
+    /// Parse a single stderr line into a ``Diagnostic/Record``.
+    ///
+    /// Returns `nil` when the line does not match the expected
+    /// `<path>:<line>:<column>: <severity>: <message>` shape — for
+    /// example, when the line is a build-progress message, an empty
+    /// line, or a continuation of a multi-line diagnostic body.
+    internal static func parse(_ line: Swift.String) -> Diagnostic.Record? {
+        let parts = line.split(separator: ":", maxSplits: 4, omittingEmptySubsequences: false)
+        guard parts.count == 5 else { return nil }
+        let path = Swift.String(parts[0])
+        guard let lineNumber = Swift.Int(parts[1]),
+            let columnNumber = Swift.Int(parts[2])
+        else { return nil }
+        let severityString = parts[3].trimmingPrefixWhitespace()
+        let message = parts[4].trimmingPrefixWhitespace()
+        guard let severity = severity(forKeyword: severityString) else { return nil }
+        return Diagnostic.Record(
+            location: Source.Location(
+                fileID: path,
+                filePath: path,
+                line: lineNumber,
+                column: columnNumber
+            ),
+            severity: severity,
+            identifier: "swift_build_diagnostic",
+            message: message
+        )
+    }
+
+    /// Map a severity keyword (`error`, `warning`, `note`, `remark`)
+    /// to the typed ``Diagnostic/Severity`` case. Unknown keywords
+    /// return `nil`, which the caller treats as a non-diagnostic
+    /// line.
+    internal static func severity(forKeyword keyword: Swift.String) -> Diagnostic.Severity? {
+        switch keyword {
+        case "error": return .error
+        case "warning": return .warning
+        case "note": return .note
+        case "remark": return .remark
+        default: return nil
         }
     }
 }

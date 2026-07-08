@@ -28,21 +28,24 @@ extension Diagnostics {
     /// this shape are silently skipped — the parser never throws, and an
     /// arbitrary stderr stream simply yields the records it can recognise.
     public enum Parser: Swift.Sendable {
-        /// Parse `text` (a captured stderr stream) into the diagnostic
-        /// records it contains.
-        ///
-        /// - Parameter text: The decoded UTF-8 contents of a tool's
-        ///   `stderr` pipe. May contain any number of non-diagnostic
-        ///   lines interleaved with parseable lines.
-        /// - Returns: The diagnostics in input order. Lines that do not
-        ///   match the expected shape are skipped without error.
-        public static func parse(stderr text: Swift.String) -> [Diagnostic.Record] {
-            var records: [Diagnostic.Record] = []
-            for line in text.split(separator: "\n", omittingEmptySubsequences: true) {
-                guard let record = Line.parse(Swift.String(line)) else { continue }
-                records.append(record)
-            }
-            return records
+    }
+}
+
+extension Diagnostics.Parser {
+    /// Parse `text` (a captured stderr stream) into the diagnostic
+    /// records it contains.
+    ///
+    /// - Parameter text: The decoded UTF-8 contents of a tool's
+    ///   `stderr` pipe. May contain any number of non-diagnostic
+    ///   lines interleaved with parseable lines.
+    /// - Returns: The diagnostics in input order. Lines that do not
+    ///   match the expected shape are skipped without error.
+    public static func parse(stderr text: Swift.String) -> [Diagnostic.Record] {
+        var records: [Diagnostic.Record] = []
+        for line in text.split(separator: "\n", omittingEmptySubsequences: true) {
+            guard let record = Line.parse(Swift.String(line)) else { continue }
+            records.append(record)
         }
+        return records
     }
 }

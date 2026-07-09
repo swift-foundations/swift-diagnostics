@@ -15,14 +15,14 @@ import Testing
 
 @Suite("Diagnostics.Parser")
 struct DiagnosticsParserTests {
-    @Test("Empty stderr yields no records")
-    func emptyStderrYieldsNoRecords() {
+    @Test
+    func `Empty stderr yields no records`() {
         let records = Diagnostics.Parser.parse(stderr: "")
         #expect(records.isEmpty)
     }
 
-    @Test("Single error line yields one record with expected fields")
-    func singleErrorLineYieldsOneRecord() {
+    @Test
+    func `Single error line yields one record with expected fields`() {
         let stderr = "/path/to/File.swift:12:5: error: cannot find 'foo' in scope"
         let records = Diagnostics.Parser.parse(stderr: stderr)
         try? #require(records.count == 1)
@@ -35,8 +35,8 @@ struct DiagnosticsParserTests {
         #expect(record.location.line.underlying == 12)
     }
 
-    @Test("Multiple lines mixed severities preserve order and counts")
-    func multipleLinesMixedSeverities() {
+    @Test
+    func `Multiple lines mixed severities preserve order and counts`() {
         let stderr = """
             /A.swift:1:1: error: bad
             /B.swift:2:2: warning: meh
@@ -49,8 +49,8 @@ struct DiagnosticsParserTests {
         #expect(records.map(\.message) == ["bad", "meh", "fyi", "hint"])
     }
 
-    @Test("Malformed lines are silently skipped")
-    func malformedLinesSilentlySkipped() {
+    @Test
+    func `Malformed lines are silently skipped`() {
         let stderr = """
             Building swift-foo
             /Real.swift:7:3: warning: shadowed
@@ -66,8 +66,8 @@ struct DiagnosticsParserTests {
         #expect(record.message == "shadowed")
     }
 
-    @Test("Severity-keyword mapper covers all four wire keywords")
-    func severityKeywordMapperCoversAllFour() {
+    @Test
+    func `Severity-keyword mapper covers all four wire keywords`() {
         #expect(Diagnostics.Parser.Line.severity(forKeyword: "error") == .error)
         #expect(Diagnostics.Parser.Line.severity(forKeyword: "warning") == .warning)
         #expect(Diagnostics.Parser.Line.severity(forKeyword: "note") == .note)

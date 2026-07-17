@@ -14,7 +14,7 @@ import Testing
 @testable import Diagnostics
 
 extension Diagnostics.Parser {
-    @Suite("Diagnostics.Parser") struct Test {
+    @Suite struct Test {
         @Test
         func `Empty stderr yields no records`() {
             let records = Diagnostics.Parser.parse(stderr: "")

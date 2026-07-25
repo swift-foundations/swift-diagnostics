@@ -1,10 +1,31 @@
 # swift-diagnostics
 
+![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
+
 Composed parsers and adapters for diagnostic-emitting tools.
 
 `swift-diagnostics` turns external tool output (today: `swift build` stderr) into typed `Diagnostic.Record` values from `swift-diagnostic-primitives`. It's the L3 home for parser logic that composes the L1 record / severity / source-location primitives — so consumers like `swift-impact`, lint runners, and CI reporters share one parser instead of each carrying their own.
 
 The library lives at `Diagnostics` (plural). The L1 record types live at `Diagnostic` (singular) in [swift-diagnostic-primitives](https://github.com/swift-primitives/swift-diagnostic-primitives) and re-export through this package.
+
+## Installation
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/swift-foundations/swift-diagnostics.git", branch: "main")
+]
+```
+
+Add the product to your target:
+
+```swift
+.target(
+    name: "YourTarget",
+    dependencies: [
+        .product(name: "Diagnostics", package: "swift-diagnostics")
+    ]
+)
+```
 
 ## Use case
 

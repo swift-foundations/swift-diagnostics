@@ -25,6 +25,8 @@ extension Diagnostics.Parser.Test.Unit {
     func `Single error line yields one record with expected fields`() {
         let stderr = "/path/to/File.swift:12:5: error: cannot find 'foo' in scope"
         let records = Diagnostics.Parser.parse(stderr: stderr)
+        // swift-linter:disable:next try optional
+        // REASON: Testing.#require throws an untyped Swift Testing framework error.
         try? #require(records.count == 1)
         guard let record = records.first else { return }
         #expect(record.severity == .error)
@@ -78,6 +80,8 @@ extension Diagnostics.Parser.Test.`Edge Case` {
             /Unknown.swift:1:1: bogus: not a real severity
             """
         let records = Diagnostics.Parser.parse(stderr: stderr)
+        // swift-linter:disable:next try optional
+        // REASON: Testing.#require throws an untyped Swift Testing framework error.
         try? #require(records.count == 1)
         guard let record = records.first else { return }
         #expect(record.severity == .warning)
@@ -88,6 +92,8 @@ extension Diagnostics.Parser.Test.`Edge Case` {
     func `CRLF line endings leave no carriage-return residue`() {
         let stderr = "/A.swift:1:1: error: bad\r\n"
         let records = Diagnostics.Parser.parse(stderr: stderr)
+        // swift-linter:disable:next try optional
+        // REASON: Testing.#require throws an untyped Swift Testing framework error.
         try? #require(records.count == 1)
         guard let record = records.first else { return }
         #expect(record.message == "bad")

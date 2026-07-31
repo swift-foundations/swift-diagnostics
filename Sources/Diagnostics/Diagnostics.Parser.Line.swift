@@ -73,9 +73,3 @@ extension Swift.Substring {
         Swift.String(self.drop(while: { $0 == " " || $0 == "\t" }))
     }
 }
-
-extension Swift.String {
-    fileprivate func trimmingPrefixWhitespace() -> Swift.String {
-        Swift.String(self.drop(while: { $0 == " " || $0 == "\t" }))
-    }
-}

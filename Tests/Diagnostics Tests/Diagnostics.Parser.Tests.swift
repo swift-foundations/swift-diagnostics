@@ -67,6 +67,15 @@ extension Diagnostics.Parser {
         }
 
         @Test
+        func `CRLF line endings leave no carriage-return residue`() {
+            let stderr = "/A.swift:1:1: error: bad\r\n"
+            let records = Diagnostics.Parser.parse(stderr: stderr)
+            try? #require(records.count == 1)
+            guard let record = records.first else { return }
+            #expect(record.message == "bad")
+        }
+
+        @Test
         func `Severity-keyword mapper covers all four wire keywords`() {
             #expect(Diagnostics.Parser.Line.severity(forKeyword: "error") == .error)
             #expect(Diagnostics.Parser.Line.severity(forKeyword: "warning") == .warning)

@@ -41,9 +41,18 @@ extension Diagnostics.Parser {
     /// - Returns: The diagnostics in input order. Lines that do not
     ///   match the expected shape are skipped without error.
     public static func parse(stderr text: Swift.String) -> [Diagnostic.Record] {
+        // Splits on the Unicode-scalar view rather than `Character`: Swift
+        // groups an adjacent CR+LF pair into a single extended grapheme
+        // cluster, so a `Character`-level split(separator: "\n") never
+        // matches inside a CRLF pair and a CRLF stream would parse as one
+        // unsplit blob. Scalars have no such fusion.
         var records: [Diagnostic.Record] = []
-        for line in text.split(separator: "\n", omittingEmptySubsequences: true) {
-            guard let record = Line.parse(Swift.String(line)) else { continue }
+        for scalarLine in text.unicodeScalars.split(separator: "\n", omittingEmptySubsequences: true) {
+            var scalarLine = scalarLine
+            if scalarLine.last == "\r" {
+                scalarLine.removeLast()
+            }
+            guard let record = Line.parse(Swift.String(scalarLine)) else { continue }
             records.append(record)
         }
         return records

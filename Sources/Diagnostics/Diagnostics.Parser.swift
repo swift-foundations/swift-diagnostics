@@ -53,7 +53,8 @@ extension Diagnostics.Parser {
             if byteLine.last == 0x0D {
                 byteLine.removeLast()
             }
-            guard let record = Line.parse(Swift.String(decoding: byteLine, as: Swift.UTF8.self)) else { continue }
+            guard let record = Line.parse(Swift.String(decoding: byteLine, as: Swift.UTF8.self))
+            else { continue }
             records.append(record)
         }
         return records
